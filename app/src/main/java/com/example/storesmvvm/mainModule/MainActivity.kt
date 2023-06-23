@@ -4,6 +4,7 @@ package com.example.storesmvvm.mainModule
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -55,7 +56,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         //add an observer to the model, so when the model change, it will refresh
         mMainViewModel.getStores().observe(this) { storesList ->
             mAdapter.setStores(storesList)
+
         }
+
+        mMainViewModel.isShowProgress().observe(this) { isShowProgress ->
+            mBinding.progressBar.visibility = if (isShowProgress) View.VISIBLE else View.GONE
+        }
+
         //initialize the editStoreViewModel
         mEditStoreViewModel = ViewModelProvider(this)[EditStoreViewModel::class.java]
         //hide or show the fab
@@ -168,7 +175,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     /**
      * Open the dial app from the device to call the store
-     * @param the phone's store to call it
+     * @param phone's store to call it
      */
     private fun dial(phone: String){
         val callIntent = Intent().apply {
